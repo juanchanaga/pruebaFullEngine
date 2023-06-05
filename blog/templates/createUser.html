@@ -5,6 +5,11 @@
     <title>Create User</title>
 </head>
 <body>
+
+{% extends 'base.html' %}
+
+{% block content %}
+
 <h1>Create User</h1>
 <br>
 
@@ -18,8 +23,7 @@
         Registrar
     </button>
 </form>
-<button style="margin-top: 1rem" onclick="window.location.href = '../'">
-    Inicio
-</button>
+
+{% endblock %}
 </body>
 </html>
