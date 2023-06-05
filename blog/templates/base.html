@@ -23,19 +23,22 @@
 <div>
     <nav>
         <ul class="navBar">
-            <li class="navList">
-                <a href="/">Ingresar</a>
-            </li>
-            <li class="navList">
-                <a href="/blogsList">Blogs</a>
-            </li>
 
+            <li class="navList">
+                <a href="/blogs/list">Blogs</a>
+            </li>
             <!--Verifica si el usuario está autenticado para mostrar un menú o el otro-->
             {% if user.is_authenticated %}
+            <li class="navList">
+                <a href="/user">Perfil</a>
+            </li>
             <li class="navList">
                 <a href="/logout">Salir</a>
             </li>
             {% else %}
+            <li class="navList">
+                <a href="/">Ingresar</a>
+            </li>
             <li class="navList">
                 <a href="/signup">Registrarse</a>
             </li>

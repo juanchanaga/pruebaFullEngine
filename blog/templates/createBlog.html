@@ -9,7 +9,16 @@
 {% extends 'base.html' %}
 
 {% block content %}
+<form action="/blogs/" method="POST">
+    {% csrf_token %}
+    {{error}}
+    {{form.as_p}}
 
+    <button>
+        Guardar
+    </button>
+
+</form>
 {% endblock %}
 
 </body>

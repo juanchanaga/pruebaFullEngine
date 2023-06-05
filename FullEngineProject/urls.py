@@ -22,7 +22,9 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', views.home),
     path('signup/', views.signup),
-    path('blogsList/', views.blogs_list),
-    path('blogs', views.blogs),
+    path('blogs/list/', views.blogs_list),
+    path('blogs/', views.create_blogs),
+    path('blogs/detail/<int:blog_id>', views.blogs_detail, name='blogs_details'),
     path('logout/', views.salir),
+    path('user/', views.perfil, name='user')
 ]

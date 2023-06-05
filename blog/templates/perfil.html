@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Perfil</title>
+</head>
+<body>
+{% extends 'base.html' %}
+
+{% block content %}
+<form action="/user/" method="POST">
+    {{error}}
+    {% csrf_token %}
+    {{form.as_p}}
+
+    <div style="margin-top: 2rem">
+        <button>
+            Guardar
+        </button>
+    </div>
+</form>
+{% endblock %}
+</body>
+</html>

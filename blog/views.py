@@ -1,8 +1,11 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
+from django.contrib.auth.forms import UserCreationForm, AuthenticationForm, UserChangeForm
 from django.contrib.auth.models import User
 from django.db import IntegrityError
 from django.contrib.auth import login, logout, authenticate
+from django.contrib.auth.decorators import login_required
+from .models import Blogs, Comentarios
+from .forms import CreateBlogForm, CreateComentarioForm
 
 
 # Create your views here.
@@ -56,11 +59,59 @@ def home(request):
 
 
 def blogs_list(request):
-    return render(request, 'blogsList.html')
+    blogs = Blogs.objects.all()
+    return render(request, 'blogsList.html', {
+        'blogs': blogs
+    })
 
 
-def blogs(request):
-    return render(request, 'blogs.html')
+@login_required
+def create_blogs(request):
+    if request.method == 'GET':
+        return render(request, 'createBlog.html', {
+            'form': CreateBlogForm
+        })
+    else:
+        try:
+            form = CreateBlogForm(request.POST)
+            new_blog = form.save(commit=False)
+            new_blog.autor = request.user
+            new_blog.save()
+            return blogs_list(request)
+        except ValueError:
+            return render(request, 'createBlog.html', {
+                'form': CreateBlogForm,
+                'error': 'Error creando el blog'
+            })
+
+
+def blogs_detail(request, blog_id):
+    if request.method == 'GET':
+        blog = Blogs.objects.filter(id=blog_id)
+        comentarios = Comentarios.objects.filter(blog_id=blog_id)
+        return render(request, 'detailsBlog.html', {
+            'blogs': blog,
+            'comentarios': comentarios,
+            'form': CreateComentarioForm
+        })
+    else:
+        try:
+            blog = get_object_or_404(Blogs, pk=blog_id)
+            comentarios = Comentarios.objects.filter(blog_id=blog_id)
+            form = CreateComentarioForm(request.POST)
+            new_comentario = form.save(commit=False)
+            new_comentario.blog_id = blog_id
+            new_comentario.autor_id = request.user.id
+            new_comentario.save()
+            return blogs_list(request);
+        except ValueError:
+            return render(request, 'detailsBlog.html', {
+                'blogs': blog,
+                'comentarios': comentarios,
+                'form': CreateComentarioForm,
+                'error': 'Error creando comentario'
+            })
+
 
 def success(request):
     return render(request, 'success.html')
@@ -73,3 +124,25 @@ def error(request):
 def salir(request):
     logout(request)
     return redirect('/')
+
+
+@login_required
+def perfil(request):
+    if request.method == 'GET':
+        user = get_object_or_404(User, username=request.user)
+        form = UserChangeForm(instance=user)
+        return render(request, 'perfil.html', {
+            'user': user,
+            'form': form
+        })
+    else:
+        try:
+            user = get_object_or_404(User, username=request.user)
+            form = UserChangeForm(request.POST, instance=user)
+            form.save()
+            return redirect('user')
+        except ValueError:
+            return render(request, 'task_detail.html',{
+                'user': user,
+                'form': form,
+                'error': 'Error actualizando usuario'})

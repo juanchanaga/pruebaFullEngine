@@ -9,6 +9,24 @@
 
 {% block content %}
 
+{% if user.is_authenticated %}
+
+<button onclick="window.location.href='/blogs/'">
+    Crear Blog
+</button>
+
+{% endif %}
+
+<ul>
+    {% for blog in blogs %}
+    <li>
+        <a href="{% url 'blogs_details' blog.id %}">
+           Titulo: {{blog.titulo}} - Fecha: {{blog.fecha_creacion}} - Autor: {{blog.autor}}
+        </a>
+    </li>
+    {% endfor %}
+</ul>
+
 {% endblock %}
 </body>
 </html>

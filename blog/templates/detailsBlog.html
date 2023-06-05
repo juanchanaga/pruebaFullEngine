@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Details Blog</title>
+</head>
+<body>
+
+{% extends 'base.html' %}
+
+{% block content %}
+
+{{error}}
+
+{% for blog in blogs %}
+
+<div style="font-size: larger; font-weight: bolder; margin-bottom: 1rem">
+    {{blog.titulo}} - {{blog.fecha_creacion}}
+</div>
+
+<div style="margin-bottom: 2rem">
+    {{blog.contenido}}
+</div>
+
+<div>
+    Creado por {{blog.autor}}
+</div>
+
+{% endfor %}
+
+<h3 style="color: red; margin-top: 2rem">Comentarios</h3>
+
+{% for comentario in comentarios %}
+<div style="margin-top: 1rem">
+    <hr>
+    {{comentario.comentario}}
+</div>
+{% endfor %}
+
+{% if user.is_authenticated %}
+
+<form style="margin-top: 3rem" method="POST">
+    {% csrf_token %}
+    {{form.as_p}}
+
+    <button>
+        Crear Comentario
+    </button>
+</form>
+
+{% endif %}
+
+{% endblock %}
+
+</body>
+</html>
